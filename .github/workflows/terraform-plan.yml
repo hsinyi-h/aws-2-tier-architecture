@@ -1,13 +1,12 @@
 name: Terraform Automation
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-  pull_request:
 
 jobs:
-  terraform:
+  terraform_plan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,7 +23,7 @@ jobs:
           terraform_version: 1.2.6
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check
+        run: terraform fmt -check -recursive
       - name: Terraform init
         id: init
         run: terraform init
