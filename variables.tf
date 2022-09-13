@@ -37,7 +37,7 @@ variable "allocated_storage" { default = 10 }
 
 variable "storage_type" { default = "gp2" }
 
-variable "db_username" { default = "admin"  }
+variable "db_username" { default = "admin" }
 
 variable "engine" { default = "mysql" }
 
@@ -45,9 +45,9 @@ variable "engine_version" { default = "8.0.20" }
 
 variable "db_instance" { default = "db.t2.micro" }
 
-variable "db_identifier_name" { 
-	type = string 
-	description = " Name to identify the database"
+variable "db_identifier_name" {
+  type        = string
+  description = " Name to identify the database"
 }
 
 variable "ebs_volume_type" { default = "gp2" }

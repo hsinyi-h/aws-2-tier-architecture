@@ -10,20 +10,20 @@ resource "aws_vpc" "vpc" {
 # Internet Gateway
 #--------------------------------------------------------------
 
-resource "aws_internet_gateway" "igw"{
-  vpc_id                        = aws_vpc.vpc.id
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
 }
 #--------------------------------------------------------------
 # Public subnet
 #--------------------------------------------------------------
 
-resource "aws_subnet" "pub-subnet"{
+resource "aws_subnet" "pub-subnet" {
   count = length(var.pub_cidr)
 
-  vpc_id			= aws_vpc.vpc.id
-  cidr_block   			= element(var.pub_cidr, count.index)
-  availability_zone		= element(var.az, count.index)
-  map_public_ip_on_launch	= true
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = element(var.pub_cidr, count.index)
+  availability_zone       = element(var.az, count.index)
+  map_public_ip_on_launch = true
 }
 
 resource "aws_route_table" "pub-rtb" {
@@ -49,12 +49,12 @@ resource "aws_main_route_table_association" "main-rtb-as" {
 #--------------------------------------------------------------
 # Private subnet
 #--------------------------------------------------------------
-resource "aws_subnet" "pri-subnet"{
+resource "aws_subnet" "pri-subnet" {
   count = length(var.pri_cidr)
 
-  vpc_id			= aws_vpc.vpc.id
-  cidr_block			= element(var.pri_cidr, count.index)
-  availability_zone		= element(var.az, count.index)
-  map_public_ip_on_launch	= false
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = element(var.pri_cidr, count.index)
+  availability_zone       = element(var.az, count.index)
+  map_public_ip_on_launch = false
 }
 

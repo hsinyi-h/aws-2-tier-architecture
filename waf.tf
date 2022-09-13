@@ -1,7 +1,7 @@
 resource "aws_wafv2_web_acl" "main" {
-  name        = "test-acl"
-  scope       = "CLOUDFRONT"
-  provider    = aws.virginia
+  name     = "test-acl"
+  scope    = "CLOUDFRONT"
+  provider = aws.virginia
 
   default_action {
     allow {}

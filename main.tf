@@ -21,10 +21,10 @@ resource "aws_instance" "ec2" {
   associate_public_ip_address = "true"
   key_name                    = aws_key_pair.ec2-key.key_name
   vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
-  user_data		      = file("./bootstrap.sh")
+  user_data                   = file("./bootstrap.sh")
   root_block_device {
-	volume_type		= var.ebs_volume_type
-	volume_size		= var.ebs_volume_size
+    volume_type = var.ebs_volume_type
+    volume_size = var.ebs_volume_size
   }
 }
 
@@ -38,8 +38,8 @@ resource "aws_eip" "ec2-eip" {
 #--------------------------------------------------------------
 
 resource "aws_db_subnet_group" "db-subnet-group" {
-  name        = var.db-subnet-group_name
-  subnet_ids  = aws_subnet.pri-subnet.*.id
+  name       = var.db-subnet-group_name
+  subnet_ids = aws_subnet.pri-subnet.*.id
 }
 
 resource "aws_db_instance" "db" {
@@ -48,7 +48,7 @@ resource "aws_db_instance" "db" {
   storage_type           = var.storage_type
   engine                 = var.engine
   engine_version         = var.engine_version
-  multi_az		 = true
+  multi_az               = true
   instance_class         = var.db_instance
   identifier             = var.db_identifier_name
   username               = var.db_username
@@ -57,8 +57,8 @@ resource "aws_db_instance" "db" {
   vpc_security_group_ids = [aws_security_group.rds-sg.id]
 
   depends_on = [
-	aws_secretsmanager_secret_version.db-password
-  ] 
+    aws_secretsmanager_secret_version.db-password
+  ]
 
 }
 
@@ -71,17 +71,17 @@ resource "aws_security_group" "alb-sg" {
   description = "Allow inbound traffic"
   vpc_id      = aws_vpc.vpc.id
 
-ingress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -89,17 +89,17 @@ egress {
 resource "aws_security_group" "ec2-sg" {
   name = "ec2-sg"
 
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc.id
 
   dynamic "ingress" {
     for_each = { for i in var.ingress_config : i.port => i }
 
     content {
-      from_port   = ingress.value.port
-      to_port     = ingress.value.port
-      protocol    = ingress.value.protocol
-      cidr_blocks = ingress.value.cidr_blocks
-      security_groups  = [aws_security_group.alb-sg.id]
+      from_port       = ingress.value.port
+      to_port         = ingress.value.port
+      protocol        = ingress.value.protocol
+      cidr_blocks     = ingress.value.cidr_blocks
+      security_groups = [aws_security_group.alb-sg.id]
     }
   }
 
@@ -115,18 +115,18 @@ resource "aws_security_group" "rds-sg" {
   name        = "rds-sg"
   description = "Allows ec2 to access the RDS instances"
   vpc_id      = aws_vpc.vpc.id
-ingress {
-    description      = "EC2 to MYSQL"
-    from_port        = 3306
-    to_port          = 3306
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.ec2-sg.id]
+  ingress {
+    description     = "EC2 to MYSQL"
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ec2-sg.id]
   }
-egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -141,7 +141,7 @@ resource "aws_lb" "alb" {
   security_groups    = [aws_security_group.alb-sg.id]
   subnets            = aws_subnet.pub-subnet.*.id
 
-  depends_on = [ aws_security_group.alb-sg ]
+  depends_on = [aws_security_group.alb-sg]
 
 }
 resource "aws_lb_target_group" "alb-target-group" {
@@ -149,7 +149,7 @@ resource "aws_lb_target_group" "alb-target-group" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.vpc.id
-  }
+}
 
 resource "aws_lb_listener" "alb-listener" {
   load_balancer_arn = aws_lb.alb.arn
@@ -159,9 +159,9 @@ resource "aws_lb_listener" "alb-listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.alb-target-group.arn
   }
-    lifecycle {
+  lifecycle {
     create_before_destroy = true
-    }
+  }
 }
 
 

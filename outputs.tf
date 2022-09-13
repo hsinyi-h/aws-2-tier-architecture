@@ -12,12 +12,12 @@ output "ec2_eip" { value = aws_eip.ec2-eip.public_ip }
 
 output "db_endpoint" { value = aws_db_instance.db.endpoint }
 
-output "db_password" { 
-	value = data.aws_secretsmanager_secret_version.db-password.secret_string 
-	sensitive = true
+output "db_password" {
+  value     = data.aws_secretsmanager_secret_version.db-password.secret_string
+  sensitive = true
 }
 
-output "ec2_private_key" { 
-	value		= tls_private_key._.private_key_pem
-	sensitive	= true
+output "ec2_private_key" {
+  value     = tls_private_key._.private_key_pem
+  sensitive = true
 }
