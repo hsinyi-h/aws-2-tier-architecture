@@ -1,6 +1,8 @@
-name: Terraform Automation
+name: Terraform Plan
 
 on:
+  push:
+    - develope
   pull_request:
     branches:
       - main
