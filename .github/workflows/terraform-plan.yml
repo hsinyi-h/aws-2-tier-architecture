@@ -2,7 +2,8 @@ name: Terraform Plan
 
 on:
   push:
-    - develope
+    branches:
+      - "develope"
   pull_request:
     branches:
       - main
